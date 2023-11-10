@@ -1,4 +1,4 @@
-##!/usr/bin/python3
+#!/usr/bin/python3
 import requests
 """
 Prints the titles of the first 10 hot posts listed for a given subreddit.
@@ -6,7 +6,7 @@ Prints the titles of the first 10 hot posts listed for a given subreddit.
 
 def top_ten(subreddit):
     """Main function"""
-    URL = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    URL = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
 
     HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
     try:
