@@ -1,15 +1,16 @@
 #!/usr/bin/python3
-"""Return the number of subscribers of a given subreddit"""
+"""0-subs.py"""
 
 import requests
 
-def number_of_subscribers(subreddit):
-    """Main function"""
-    URL = f"https://www.reddit.com/r/{subreddit}/about.json"
 
-    HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
-    try:
-        RESPONSE = requests.get(URL, headers=HEADERS, allow_redirects=False)
-        return RESPONSE.json().get("data").get("subscribers")
-    except Exception as e:
+def number_of_subscribers(subreddit):
+    """Reddit subscribers"""
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {"User-Agent": "My-User-Agent"}
+
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    if response.status_code != 200:
         return 0
+    else:
+        return response.json().get("data").get("subscribers")
