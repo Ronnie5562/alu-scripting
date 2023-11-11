@@ -1,10 +1,8 @@
 #!/usr/bin/python3
+"""Prints the titles of the first 10 hot posts listed for a given subreddit.
+"""
+
 import requests
-
-"""
-Prints the titles of the first 10 hot posts listed for a given subreddit.
-"""
-
 
 def top_ten(subreddit):
     """Main function"""
