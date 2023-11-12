@@ -1,36 +1,44 @@
 #!/usr/bin/python3
-"""fetches the title of all hot posts for a given subreddit recursively"""
-
+'''a recursive function that queries the Reddit API,
+ parses the title of all hot articles, and prints a
+ sorted count of given keywords
+'''
 import requests
 
 
-def count_words(subreddit, word_list=[], hot_list=[], after=""):
-    """Main function"""
-    URL = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
-
-    HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
-    PARAMS = {"after": after, "limit": 100}
-    try:
-        RESPONSE = requests.get(URL, headers=HEADERS, params=PARAMS,
-                                allow_redirects=False)
-        after = RESPONSE.json().get("data").get("after")
-        HOT_POSTS = RESPONSE.json().get("data").get("children")
-        [hot_list.append(post.get('data').get('title')) for post in HOT_POSTS]
-        if after is not None:
-            return count_words(subreddit, word_list, hot_list, after)
-
-        new_dict = {}
-        word_list = set([wrd.lower() for wrd in word_list])
-        for title in hot_list:
-            for word in title.split():
-                if word.lower() in new_dict:
-                    new_dict[word.lower()] += 1
-                else:
-                    new_dict.update({word.lower(): 1})
-
-        sorted_dict = sorted(new_dict.items(), key=lambda x: (-x[1], x[0]))
-        for key, value in sorted_dict:
-            if (key in word_list) and (value > 0):
-                print("{}: {}".format(key, value))
-    except Exception:
+def count_words(subreddit, word_list, fullname="", count=0, hash_table={}):
+    '''fetches all hot posts in a subreddit
+    Return:
+        None - if subreddit is invalid
+    '''
+    if subreddit is None or not isinstance(subreddit, str) or \
+       word_list is None or word_list == []:
+        return
+    url = 'https://www.reddit.com/r/{}/hot/.json'.format(subreddit)
+    params = {'after': fullname, 'count': count}
+    headers = {'user-agent': 'Mozilla/5.0 \
+(Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0'}
+    info = requests.get(url, headers=headers,
+                        params=params, allow_redirects=False)
+    if info.status_code != 200:
         return None
+    info_json = info.json()
+    results = info_json.get('data').get('children')
+    new_packet = [post.get('data').get('title') for post in results]
+    for title in new_packet:
+        for word in word_list:
+            word = word.lower()
+            formatted_title = title.lower().split(" ")
+            if word in formatted_title:
+                if (word in hash_table.keys()):
+                    hash_table[word] += formatted_title.count(word)
+                else:
+                    hash_table[word] = formatted_title.count(word)
+    after = info_json.get('data').get('after', None)
+    dist = info_json.get('data').get('dist')
+    count += dist
+    if after:
+        count_words(subreddit, word_list, after, count, hash_table)
+    else:
+        {print('{}: {}'.format(key, value)) for
+         key, value in sorted(hash_table.items(), key=lambda i: (-i[1], i[0]))}
