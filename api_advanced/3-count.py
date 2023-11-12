@@ -33,4 +33,4 @@ def count_words(subreddit, word_list=[], hot_list=[], after=""):
             if (key in word_list) and (value > 0):
                 print("{}: {}".format(key, value))
     except Exception:
-        pass
+        return None
