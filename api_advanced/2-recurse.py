@@ -11,7 +11,7 @@ def recurse(subreddit, hot_list=[], after=""):
     HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
     PARAMS = {"after": after, "limit": 100}
     try:
-        RESPONSE = requests.get(URL, headers=HEADERS, params=PARAMS, 
+        RESPONSE = requests.get(URL, headers=HEADERS, params=PARAMS,
                                 allow_redirects=False)
         after = RESPONSE.json().get("data").get("after")
         HOT_POSTS = RESPONSE.json().get("data").get("children")
