@@ -17,7 +17,7 @@ def count_words(subreddit, word_list=[], hot_list=[], after=""):
         HOT_POSTS = RESPONSE.json().get("data").get("children")
         [hot_list.append(post.get('data').get('title')) for post in HOT_POSTS]
         if after is not None:
-            return count_words(subreddit, word_list, hot_list=hot_list, after=after)
+            return count_words(subreddit, word_list, hot_list, after)
         
         new_dict = {}
         word_list = set(word_list)
@@ -31,7 +31,7 @@ def count_words(subreddit, word_list=[], hot_list=[], after=""):
         sorted_dict = sorted(new_dict.items(), key=lambda x: (-x[1], x[0]))
         for key, value in sorted_dict:
             if (key in word_list) and (value > 0):
-                print(f"{key}: {value}")
+                print("{}: {}".format(key, value))
         
     except Exception as e:
-        print(e)
+        pass
