@@ -13,5 +13,5 @@ def top_ten(subreddit):
         RESPONSE = requests.get(URL, headers=HEADERS, allow_redirects=False)
         HOT_POSTS = RESPONSE.json().get("data").get("children")
         [print(post.get('data').get('title')) for post in HOT_POSTS]
-    except Exception as e:
+    except Exception:
         print(None)
